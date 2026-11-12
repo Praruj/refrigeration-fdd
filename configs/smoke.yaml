@@ -1,0 +1,11 @@
+# Synthetic fixture (rfdd/synth.py): exercises every stage in about a minute, no download. Used by CI.
+synthetic: true
+out_dir: results/smoke
+alarm: {k: 20, n: 30, merge_gap: 30}
+threshold_margin: 1.25
+margin_grid: [0.5, 1.0, 1.25, 2.0, 4.0]
+events:
+  - {day: door, fault: lt_door_open,  start: "09:40", end: "14:30", evidence: "injected"}
+  - {day: cond, fault: cond_blockage, start: "13:05", end: "15:20", evidence: "injected"}
+anomalies: []
+sensor_study_days: [base_A]

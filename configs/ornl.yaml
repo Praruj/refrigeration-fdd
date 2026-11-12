@@ -1,0 +1,26 @@
+# Full study on the ORNL supermarket refrigeration data set.
+raw_dir: data/raw
+minute_dir: data/minute
+out_dir: results/ornl
+
+alarm:
+  k: 20          # alarm when the score beat the threshold in k of the last n minutes
+  n: 30
+  merge_gap: 30
+threshold_margin: 1.25   # threshold = margin x the highest held-out normal score seen in training
+margin_grid: [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.25, 1.5, 1.75, 2.0, 2.5, 3.0, 4.0, 6.0]
+
+# The data descriptor labels whole files and gives no schedule. These windows are my annotation, read off
+# the most direct signal for each fault (see README, "Labels"). Times are clock times on the test day.
+events:
+  - {day: door,      fault: lt_door_open,     start: "09:40", end: "14:30", evidence: "LT compressor power and discharge temperature step up at 09:40; defrost pull-down ends about 14:30"}
+  - {day: ice,       fault: lt_evap_ice,      start: "00:00", end: "23:59", evidence: "valve feeds continuously from the first minute; ice was built up on earlier days"}
+  - {day: valve,     fault: lt_eev_stuck,     start: "13:50", end: "23:59", evidence: "after the 12:15 defrost the coil never pulls down; superheat stays above 30 K"}
+  - {day: fan,       fault: mt_evap_fan,      start: "00:00", end: "17:00", evidence: "shelf temperatures T-401/T-404/T-405/T-513 are offset until about 17:00, then step back"}
+  - {day: cond,      fault: cond_blockage,    start: "13:05", end: "15:20", evidence: "head pressure and MT compressor power step up at 13:05 and back at 15:20"}
+  - {day: evapblock, fault: mt_evap_blockage, start: "00:00", end: "23:59", evidence: "no visible onset anywhere in the file; whole day used"}
+
+# Periods inside "baseline" files that are not normal operation. They are left out of training and are not
+# counted as false alarms; the report lists what the detectors say about them separately.
+anomalies:
+  - {day: base_C, start: "07:25", end: "23:59", note: "MT case return air +4 K, air drop across the coil +5 K, valve feeding ~100% from 07:25"}
